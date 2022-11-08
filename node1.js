@@ -4,12 +4,16 @@
   */
  const fetch = require('cross-fetch')
  const fs = require('fs')
- const URL = 'https://jsonplaceholder.typicode.com/users'
+ require('dotenv').config();
+ const variable = process.env.NODE_ENV
 
- async function getData() {
+ function getData() {
      try {
-         await fetch(URL)
-             .then(res => {
+         fetch('https://jsonplaceholder.typicode.com/users')
+             .then((res) => {
+                 if (res.status >= 400) {
+                     throw new Error("Bad response from server");
+                 }
                  return res.json()
              })
              .then((result) => {
@@ -17,47 +21,32 @@
                      if (error) throw error;
                  })
              })
-     } catch (e) {
-         console.log(e)
+
+         if (variable == 'PRODUCTION') {
+             fetch('https://jsonplaceholder.typicode.com/todos')
+                 .then((res) => {
+                     return res.json()
+                 })
+                 .then((result) => {
+                     fs.writeFile('./todos.json', JSON.stringify(result), (error) => {
+                         if (error) throw error;
+                     })
+                 })
+         }
+         if (variable == 'DEV') {
+             fetch('https://jsonplaceholder.typicode.com/albums')
+                 .then((res) => {
+                     return res.json()
+                 })
+                 .then((result) => {
+                     fs.writeFile('./albums.json', JSON.stringify(result), (error) => {
+                         if (error) throw error;
+                     })
+                 })
+         }
+     } catch (err) {
+         console.error(err);
      }
  }
+
  getData()
-
- /**
-  * 2. Let's work with running node script with some environment variables
-  * todo: Pass parameter ENV when you run this script. 
-  * If param is PRODUCTION  get data from https://jsonplaceholder.typicode.com/todos and write it to file todos.json
-  * If param is DEV get data from https://jsonplaceholder.typicode.com/albums and write if to file albums.json
-  */
-
- async function two() {
-     if (process.env.NODE_ENV === 'PRODUCTION') {
-         prod();
-     } else if (process.env.NODE_ENV === 'DEV') {
-         dev();
-     }
- }
- two()
- async function prod() {
-     await fetch('https://jsonplaceholder.typicode.com/todos')
-         .then(res => {
-             return res.json()
-         })
-         .then(result => {
-             fs.writeFile('./todos.json', JSON.stringify(result), (error) => {
-                 if (error) throw error;
-             })
-         })
- }
-
- async function dev() {
-     await fetch('https://jsonplaceholder.typicode.com/todos')
-         .then(res => {
-             return res.json()
-         })
-         .then(result => {
-             fs.writeFile('./albums.json', JSON.stringify(result), (error) => {
-                 if (error) throw error;
-             })
-         })
- }
