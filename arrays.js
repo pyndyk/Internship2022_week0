@@ -25,7 +25,7 @@ myArray.forEach(items => {
  *  Should return Boolean
  */
 
-const isNumber = myArray.every(function(element, index, myArray) {
+const isNumber = myArray.every((element) => {
     return typeof element === 'number'
 });
 
@@ -38,10 +38,9 @@ console.log({
  * Should return Boolean
  */
 
-const isBiggerThanFive = myArray.some(function(element, index, myArray) {
+const isBiggerThanFive = myArray.some((element) => {
     return element > 5
 })
-
 console.log({
     isBiggerThanFive,
 });
@@ -52,7 +51,6 @@ console.log({
  */
 
 const elementsBiggerThanFive = myArray.filter(item => item > 5);
-
 console.log({
     elementsBiggerThanFive,
 });
@@ -62,9 +60,8 @@ console.log({
  * Should return another Array
  */
 
-const multiplied = myArray.map(function(item) {
-    if (typeof item == 'number') return item * 2
-    else return item
+const multiplied = myArray.map((item) => {
+    return (typeof item == 'number') ? item * 2 : item
 })
 console.log({
     multiplied,
@@ -73,12 +70,10 @@ console.log({
 /**
  * 7. Calculate array sum
  */
-
-const sum = myArray.reduce(function(sum, element) {
-    if (typeof element == 'number') return sum + element
-    else return sum
-}, 0);
-
+const y = 0
+const sum = myArray.reduce((sum_2, element) => {
+    return (typeof element === 'number') ? (sum_2 + element) : sum_2
+}, y)
 console.log({
     sum,
 });
@@ -87,8 +82,8 @@ console.log({
  * 8. Sort array in ascending and descending order
  */
 
-const asc = myArray.slice(0).sort(function(a, b) { return a - b });
-const desc = myArray.slice(0).sort(function(a, b) { return a - b }).reverse()
+const asc = myArray.slice(0).sort((a, b) => { return a - b });
+const desc = myArray.slice(0).sort((a, b) => { return a - b }).reverse()
 
 console.log({
     asc,

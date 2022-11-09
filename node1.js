@@ -7,7 +7,27 @@
  require('dotenv').config();
  const variable = process.env.NODE_ENV
 
+ function getConfig() {
+     if (variable == 'PRODUCTION') {
+         return {
+             url: 'https://jsonplaceholder.typicode.com/todos',
+             fileName: './todos.json'
+         }
+     }
+     if (variable == 'DEV') {
+         return {
+             url: 'https://jsonplaceholder.typicode.com/albums',
+             fileName: './albums.json'
+         }
+     }
+ }
+
  function getData() {
+     const {
+         url,
+         fileName
+     } = getConfig();
+
      try {
          fetch('https://jsonplaceholder.typicode.com/users')
              .then((res) => {
@@ -21,29 +41,15 @@
                      if (error) throw error;
                  })
              })
-
-         if (variable == 'PRODUCTION') {
-             fetch('https://jsonplaceholder.typicode.com/todos')
-                 .then((res) => {
-                     return res.json()
+         fetch(url)
+             .then((res) => {
+                 return res.json()
+             })
+             .then((result) => {
+                 fs.writeFile(fileName, JSON.stringify(result), (error) => {
+                     if (error) throw error;
                  })
-                 .then((result) => {
-                     fs.writeFile('./todos.json', JSON.stringify(result), (error) => {
-                         if (error) throw error;
-                     })
-                 })
-         }
-         if (variable == 'DEV') {
-             fetch('https://jsonplaceholder.typicode.com/albums')
-                 .then((res) => {
-                     return res.json()
-                 })
-                 .then((result) => {
-                     fs.writeFile('./albums.json', JSON.stringify(result), (error) => {
-                         if (error) throw error;
-                     })
-                 })
-         }
+             })
      } catch (err) {
          console.error(err);
      }

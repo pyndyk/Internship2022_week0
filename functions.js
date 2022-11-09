@@ -51,8 +51,7 @@ console.log(countLetters('Node developer', 'd'));
 */
 
 function getRandom(start, end) {
-    result = Math.floor(Math.random() * (end - start + 1)) + start
-    return result;
+    return Math.floor(Math.random() * (end - start + 1)) + start
 }
 
 console.log(getRandom(0, 10));
